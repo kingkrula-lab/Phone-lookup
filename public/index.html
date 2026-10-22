@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>PhoneLookUp</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    header {
+      padding: 22px;
+      text-align: center;
+      border-bottom: 1px solid #263247;
+    }
+    header h1 { margin: 0; color: #60a5fa; }
+    main {
+      max-width: 620px;
+      margin: 65px auto;
+      padding: 24px;
+      text-align: center;
+    }
+    p { color: #cbd5e1; line-height: 1.6; }
+    form { display: flex; gap: 10px; margin-top: 28px; }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 15px;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      background: #172033;
+      color: white;
+      font-size: 16px;
+    }
+    button {
+      padding: 15px;
+      border: 0;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+    }
+    #results { margin-top: 24px; overflow-wrap: anywhere; }
+    #results a { color: #93c5fd; }
+    .note { font-size: 13px; }
+    @media (max-width: 480px) {
+      form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header><h1>PhoneLookUp</h1></header>
+  <main>
+    <h2>Search a Phone Number</h2>
+    <p>Explore publicly available information through web searches and public directory resources.</p>
+    <form id="searchForm">
+      <input id="phone" type="tel" placeholder="+1 416 555 0123"
+        aria-label="Phone number" required>
+      <button type="submit">Search</button>
+    </form>
+    <div id="results" aria-live="polite"></div>
+    <p class="note">Only use information you are legally permitted to access. Search links do not guarantee results or identify a caller.</p>
+  </main>
+  <script>
+    const form = document.getElementById("searchForm");
+    const phone = document.getElementById("phone");
+    const results = document.getElementById("results");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const number = phone.value.trim();
+      if (!number) return;
+
+      results.replaceChildren();
+      const heading = document.createElement("h3");
+      heading.textContent = "Search public sources";
+      results.appendChild(heading);
+
+      const searches = [
+        ["Google", "https://www.google.com/search?q="],
+        ["Bing", "https://www.bing.com/search?q="],
+        ["DuckDuckGo", "https://duckduckgo.com/?q="]
+      ];
+
+      searches.forEach(([name, base]) => {
+        const link = document.createElement("a");
+        link.href = base + encodeURIComponent('"' + number + '"');
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Search " + name;
+        link.style.display = "block";
+        link.style.margin = "12px";
+        results.appendChild(link);
+      });
+    });
+  </script>
+</body>
+</html>
